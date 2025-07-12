@@ -2,9 +2,10 @@ import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactiv
 import { DataTable } from "@/components/sidebar/data-table";
 import { SectionCards } from "@/components/sidebar/section-cards";
 
-import data from "./data.json"
+import data from "./data.json";
+import { ReactNode } from "react";
 
-export default function AdminIndexPage() {
+export default function AdminIndexPage({ children }: { children: ReactNode }) {
   return (
     <>
       <SectionCards />
