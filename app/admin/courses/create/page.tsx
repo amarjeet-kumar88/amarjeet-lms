@@ -30,7 +30,13 @@ import {
 import { Input } from "@/components/ui/input";
 import slugify from "slugify";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import Uploader from "@/components/file-uploader/Uploader";
 import { useTransition } from "react";
@@ -40,7 +46,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 export default function CourseCreationPage() {
-
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   // 1. Define your form.
@@ -62,21 +67,20 @@ export default function CourseCreationPage() {
 
   function onSubmit(values: CourseSchemaType) {
     startTransition(async () => {
-      const {data: result , error} = await tryCatch(CreateCourse(values));
+      const { data: result, error } = await tryCatch(CreateCourse(values));
 
-      if(error) {
+      if (error) {
         toast.error("An unexpected error occurred. Please try again.");
         return;
       }
-      if(result.status === 'success') {
+      if (result.status === "success") {
         toast.success(result.message);
-        form.reset()
-        router.push("/admin/courses")
-      }
-      else if(result.status === "error") {
+        form.reset();
+        router.push("/admin/courses");
+      } else if (result.status === "error") {
         toast.error(result.message);
       }
-    })
+    });
   }
 
   return (
@@ -137,11 +141,16 @@ export default function CourseCreationPage() {
                   type="button"
                   className="w-fit"
                   onClick={() => {
-                    const titleValue = form.getValues("title");
+                    const title = form.getValues("title").trim();
+                    const slug = slugify(title, { lower: true, strict: true });
 
-                    const slug = slugify(titleValue);
+                    if (!slug || slug.length < 3) {
+                      toast.error("Slug must be at least 3 characters");
+                      return;
+                    }
 
-                    form.setValue("slug", slug, { shouldValidate: true });
+                    form.setValue("slug", slug); // ← don't trigger validation
+                    toast.success("Slug generated!");
                   }}
                 >
                   Generate Slug <SparkleIcon className="ml-1" size={16} />
@@ -173,8 +182,7 @@ export default function CourseCreationPage() {
                   <FormItem className="w-full">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-
-                      <RichTextEditor  field={field}/>
+                      <RichTextEditor field={field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,7 +196,7 @@ export default function CourseCreationPage() {
                   <FormItem className="w-full">
                     <FormLabel>Thumbnail image</FormLabel>
                     <FormControl>
-                      <Uploader onChange={field.onChange} value={field.value}/>
+                      <Uploader onChange={field.onChange} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -253,74 +261,78 @@ export default function CourseCreationPage() {
                 />
 
                 <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Duration (hours)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Duration" type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Price ($)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Price" type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              </div>
-
-              <FormField
                   control={form.control}
-                  name="status"
+                  name="duration"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Status</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {courseStatus.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Duration (hours)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Duration"
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" disabled={isPending}>
-                    {isPending ? (
-                      <>
-                      Creating...
-                      <Loader2 className="animate-spin ml-1"/>
-                      </>
-                    ): (
-                      <>
-                      Create Course <PlusIcon className="ml-1" size={16}/>
-                      </>
-                    )}
-                </Button>
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Price ($)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Price" type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {courseStatus.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <>
+                    Creating...
+                    <Loader2 className="animate-spin ml-1" />
+                  </>
+                ) : (
+                  <>
+                    Create Course <PlusIcon className="ml-1" size={16} />
+                  </>
+                )}
+              </Button>
             </form>
           </Form>
         </CardContent>

@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { ApiResponse } from '@/lib/types';
 import { courseSchema, CourseSchemaType } from '@/lib/zodSchemas';
 import { request } from '@arcjet/next';
+import { revalidatePath } from 'next/cache';
 
 const aj = arcjet.withRule(
     detectBot({
@@ -30,19 +31,19 @@ export async function editCourse(
             fingerprint: user.user.id,
         });
 
-        if (decision.isDenied()) {
-            if (decision.reason.isRateLimit()) {
-                return {
-                    status: "error",
-                    message: "You have been blocked due to rate limiting",
-                };
-            }
-        } else {
-            return {
-                status: "error",
-                message: "You are Bot! if this is a mistake contact our support",
-            };
-        }
+        // if (decision.isDenied()) {
+        //     if (decision.reason.isRateLimit()) {
+        //         return {
+        //             status: "error",
+        //             message: "You have been blocked due to rate limiting",
+        //         };
+        //     }
+        // } else {
+        //     return {
+        //         status: "error",
+        //         message: "You are Bot! if this is a mistake contact our support",
+        //     };
+        // }
 
         const result = courseSchema.safeParse(data);
 
@@ -73,4 +74,90 @@ export async function editCourse(
             message: "Failed to update Course"
         }
     }
+}
+
+export async function reorderLessons(
+    chapterId: string,
+    lessons: { id: string; position: number; }[],
+    courseId: string,
+): Promise<ApiResponse> {
+    await requireAdmin();
+    try {
+
+        if (!lessons || lessons.length === 0) {
+            return {
+                status: "error",
+                message: "No lessons provided for reordering.",
+            };
+        }
+
+        const update = lessons.map((lesson) => prisma.lesson.update({
+            where: {
+                id: lesson.id,
+                chapterId: chapterId,
+            },
+            data: {
+                position: lesson.position,
+            },
+        })
+        );
+
+    await prisma.$transaction(update);
+
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+
+    return {
+        status: "success",
+        message: "Lessons reordered successfully",
+    }
+
+    } catch {
+        return {
+            status: "error",
+            message: "Failed to reorder lessons.",
+        }
+    }
+
+}
+
+export async function reorderChapter(
+    courseId: string,
+    chapters: {id: string; position: number }[]
+): Promise<ApiResponse> {
+    await requireAdmin();
+    try {
+        if(!chapters || chapters.length === 0){
+            return {
+                status: "error",
+                message: "No chapters provided for reordering.",
+            };
+        }
+        const updates = chapters.map((chapter) => prisma.chapter.update({
+            where: {
+                id: chapter.id,
+                courseId: courseId,
+            },
+            data: {
+                position: chapter.position,
+            },
+        })
+        );
+
+    await prisma.$transaction(updates);
+
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+
+    return {
+        status: "success",
+        message: "Chapter reordered successfully",
+    }
+
+
+    } catch {
+        return {
+            status: "error",
+            message: "Failed to reorder chapter",
+        };
+    }
+
 }

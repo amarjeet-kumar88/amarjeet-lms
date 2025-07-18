@@ -33,19 +33,19 @@ export async function CreateCourse(
             fingerprint: session.user.id,
         });
 
-        if (decision.isDenied()) {
-            if (decision.reason.isRateLimit()) {
-                return {
-                    status: "error",
-                    message: "You have been blocked due to rate limiting",
-                };
-            }
-        } else {
-            return {
-                status: "error",
-                message: "You are Bot! if this is a mistake contact our support",
-            };
-        }
+        // if (decision.isDenied()) {
+        //     if (decision.reason.isRateLimit()) {
+        //         return {
+        //             status: "error",
+        //             message: "You have been blocked due to rate limiting",
+        //         };
+        //     }
+        // } else {
+        //     return {
+        //         status: "error",
+        //         message: "You are Bot! if this is a mistake contact our support",
+        //     };
+        // }
 
         const validation = courseSchema.safeParse(data);
 
