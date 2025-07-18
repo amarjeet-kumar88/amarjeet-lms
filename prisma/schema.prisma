@@ -11,34 +11,38 @@ datasource db {
 model User {
   id            String    @id
   name          String
-  email         String    @unique
+  email         String
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  banExpires    DateTime?
-  banReason     String?
-  banned        Boolean?
-  role          String?
-  courses       Course[]
-  accounts      Account[]
   sessions      Session[]
+  accounts      Account[]
+  courses       Course[]
 
+  role       String?
+  banned     Boolean?
+  banReason  String?
+  banExpires DateTime?
+
+  @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id             String   @id
-  expiresAt      DateTime
-  token          String   @unique
-  createdAt      DateTime
-  updatedAt      DateTime
-  ipAddress      String?
-  userAgent      String?
-  userId         String
-  impersonatedBy String?
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  impersonatedBy String?
+
+  @@unique([token])
   @@map("session")
 }
 
@@ -47,6 +51,7 @@ model Account {
   accountId             String
   providerId            String
   userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -56,7 +61,6 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -73,46 +77,27 @@ model Verification {
 }
 
 model Course {
-  id               String       @id @default(uuid())
-  title            String
-  description      String
-  fileKey          String
-  price            Int
-  duration         Int
-  level            CourseLevel  @default(Beginner)
+  id String @id @default(uuid())
+
+  title       String
+  description String
+  fileKey     String
+  price       Int
+  duration    Int
+  level       CourseLevel @default(Beginner)
+
   category         String
   smallDescription String
-  slug             String       @unique
-  status           CourseStatus @default(Draft)
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  userId           String
-  chapter          Chapter[]
-  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+  slug             String @unique
 
-model Chapter {
-  id        String   @id @default(uuid())
-  title     String
-  position  Int
+  status CourseStatus @default(Draft)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  courseId  String
-  Course    Course   @relation(fields: [courseId], references: [id])
-  lessons   Lesson[]
-}
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
 
-model Lesson {
-  id           String   @id @default(uuid())
-  title        String
-  description  String?
-  thumbnailKey String?
-  videoKey     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  chapterId    String
-  position     Int
-  Chapter      Chapter  @relation(fields: [chapterId], references: [id])
+  chapter Chapter[]
 }
 
 enum CourseLevel {
@@ -125,4 +110,33 @@ enum CourseStatus {
   Draft
   Publish
   Archive
+}
+
+model Chapter {
+  id String @id @default(uuid())
+
+  title    String
+  position Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id String @id @default(uuid())
+
+  title        String
+  description  String?
+  thumbnailKey String?
+  videoKey     String?
+  position     Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapterId String
 }
