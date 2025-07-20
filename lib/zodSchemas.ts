@@ -63,7 +63,26 @@ export const courseSchema = z.object({
         .min(3, { message: "Slug must be at least 3 characters long" }),
 
     status: z
-        .enum(courseStatus, { message: 'Status is required' }),
-})
+        .enum(courseStatus, {
+            message: 'Status is required'
 
-export type CourseSchemaType = z.infer<typeof courseSchema>
+        }),
+});
+
+export const chapterSchema = z.object({
+    name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
+    courseId: z.string().uuid({ message: "Invalid course id" }),
+});
+
+export const LessonSchema = z.object({
+    name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
+    courseId: z.string().uuid({ message: "Invalid course id" }),
+    chapterId: z.string().uuid({ message: "Invalid chapter id" }),
+    description: z.string().min(3, { message: "Description must be at least 3 characters long" }).optional(),videoKey: z.string().optional(),
+    thumbnailKey: z.string().optional(),
+    
+});
+
+export type CourseSchemaType = z.infer<typeof courseSchema>;
+export type ChapterSchemaType = z.infer<typeof chapterSchema>;
+export type LessonSchemaType = z.infer<typeof LessonSchema>;
