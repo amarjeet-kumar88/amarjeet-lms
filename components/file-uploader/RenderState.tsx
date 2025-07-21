@@ -49,19 +49,25 @@ export function RenderUploadedState({
   previewUrl,
   isDeleting,
   handleRemovaFile,
+  fileType,
 }: {
   previewUrl: string;
-  isDeleting: boolean,
+  isDeleting: boolean;
   handleRemovaFile: () => void;
+  fileType: "image" | "video";
 }) {
   return (
-    <div>
-      <Image
-        src={previewUrl}
-        alt="Uploaded File"
-        fill
-        className="object-contain p-2"
-      />
+    <div className="relative group w-full h-full flex items-center justify-center">
+      {fileType === "video" ? (
+        <video src={previewUrl} controls className="rounded-md w-full h-full" />
+      ) : (
+        <Image
+          src={previewUrl}
+          alt="Uploaded File"
+          fill
+          className="object-contain p-2"
+        />
+      )}
 
       <Button
         variant="destructive"
@@ -71,8 +77,8 @@ export function RenderUploadedState({
         disabled={isDeleting}
       >
         {isDeleting ? (
-          <Loader2 className="size-4 animate-spin"/>
-        ): (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
           <XIcon className="size-4" />
         )}
       </Button>
