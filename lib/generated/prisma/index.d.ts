@@ -353,8 +353,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.15.0
-   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+   * Prisma Client JS version: 6.16.1
+   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
     client: string
@@ -1432,6 +1432,10 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
     /**
      * Global configuration for omitting model fields by default.
      * 
@@ -6220,6 +6224,7 @@ export namespace Prisma {
     price: number | null
     duration: number | null
     level: $Enums.CourseLevel | null
+    stripePriceId: string | null
     category: string | null
     smallDescription: string | null
     slug: string | null
@@ -6237,6 +6242,7 @@ export namespace Prisma {
     price: number | null
     duration: number | null
     level: $Enums.CourseLevel | null
+    stripePriceId: string | null
     category: string | null
     smallDescription: string | null
     slug: string | null
@@ -6254,6 +6260,7 @@ export namespace Prisma {
     price: number
     duration: number
     level: number
+    stripePriceId: number
     category: number
     smallDescription: number
     slug: number
@@ -6283,6 +6290,7 @@ export namespace Prisma {
     price?: true
     duration?: true
     level?: true
+    stripePriceId?: true
     category?: true
     smallDescription?: true
     slug?: true
@@ -6300,6 +6308,7 @@ export namespace Prisma {
     price?: true
     duration?: true
     level?: true
+    stripePriceId?: true
     category?: true
     smallDescription?: true
     slug?: true
@@ -6317,6 +6326,7 @@ export namespace Prisma {
     price?: true
     duration?: true
     level?: true
+    stripePriceId?: true
     category?: true
     smallDescription?: true
     slug?: true
@@ -6421,6 +6431,7 @@ export namespace Prisma {
     price: number
     duration: number
     level: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -6457,6 +6468,7 @@ export namespace Prisma {
     price?: boolean
     duration?: boolean
     level?: boolean
+    stripePriceId?: boolean
     category?: boolean
     smallDescription?: boolean
     slug?: boolean
@@ -6478,6 +6490,7 @@ export namespace Prisma {
     price?: boolean
     duration?: boolean
     level?: boolean
+    stripePriceId?: boolean
     category?: boolean
     smallDescription?: boolean
     slug?: boolean
@@ -6496,6 +6509,7 @@ export namespace Prisma {
     price?: boolean
     duration?: boolean
     level?: boolean
+    stripePriceId?: boolean
     category?: boolean
     smallDescription?: boolean
     slug?: boolean
@@ -6514,6 +6528,7 @@ export namespace Prisma {
     price?: boolean
     duration?: boolean
     level?: boolean
+    stripePriceId?: boolean
     category?: boolean
     smallDescription?: boolean
     slug?: boolean
@@ -6523,7 +6538,7 @@ export namespace Prisma {
     userId?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "category" | "smallDescription" | "slug" | "status" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "stripePriceId" | "category" | "smallDescription" | "slug" | "status" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     chapter?: boolean | Course$chapterArgs<ExtArgs>
@@ -6552,6 +6567,7 @@ export namespace Prisma {
       price: number
       duration: number
       level: $Enums.CourseLevel
+      stripePriceId: string
       category: string
       smallDescription: string
       slug: string
@@ -6992,6 +7008,7 @@ export namespace Prisma {
     readonly price: FieldRef<"Course", 'Int'>
     readonly duration: FieldRef<"Course", 'Int'>
     readonly level: FieldRef<"Course", 'CourseLevel'>
+    readonly stripePriceId: FieldRef<"Course", 'String'>
     readonly category: FieldRef<"Course", 'String'>
     readonly smallDescription: FieldRef<"Course", 'String'>
     readonly slug: FieldRef<"Course", 'String'>
@@ -10952,6 +10969,7 @@ export namespace Prisma {
     price: 'price',
     duration: 'duration',
     level: 'level',
+    stripePriceId: 'stripePriceId',
     category: 'category',
     smallDescription: 'smallDescription',
     slug: 'slug',
@@ -11478,6 +11496,7 @@ export namespace Prisma {
     price?: IntFilter<"Course"> | number
     duration?: IntFilter<"Course"> | number
     level?: EnumCourseLevelFilter<"Course"> | $Enums.CourseLevel
+    stripePriceId?: StringFilter<"Course"> | string
     category?: StringFilter<"Course"> | string
     smallDescription?: StringFilter<"Course"> | string
     slug?: StringFilter<"Course"> | string
@@ -11498,6 +11517,7 @@ export namespace Prisma {
     price?: SortOrder
     duration?: SortOrder
     level?: SortOrder
+    stripePriceId?: SortOrder
     category?: SortOrder
     smallDescription?: SortOrder
     slug?: SortOrder
@@ -11512,6 +11532,7 @@ export namespace Prisma {
 
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    stripePriceId?: string
     slug?: string
     AND?: CourseWhereInput | CourseWhereInput[]
     OR?: CourseWhereInput[]
@@ -11531,7 +11552,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     chapter?: ChapterListRelationFilter
     enrollment?: EnrollmentListRelationFilter
-  }, "id" | "slug">
+  }, "id" | "stripePriceId" | "slug">
 
   export type CourseOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11541,6 +11562,7 @@ export namespace Prisma {
     price?: SortOrder
     duration?: SortOrder
     level?: SortOrder
+    stripePriceId?: SortOrder
     category?: SortOrder
     smallDescription?: SortOrder
     slug?: SortOrder
@@ -11566,6 +11588,7 @@ export namespace Prisma {
     price?: IntWithAggregatesFilter<"Course"> | number
     duration?: IntWithAggregatesFilter<"Course"> | number
     level?: EnumCourseLevelWithAggregatesFilter<"Course"> | $Enums.CourseLevel
+    stripePriceId?: StringWithAggregatesFilter<"Course"> | string
     category?: StringWithAggregatesFilter<"Course"> | string
     smallDescription?: StringWithAggregatesFilter<"Course"> | string
     slug?: StringWithAggregatesFilter<"Course"> | string
@@ -12174,6 +12197,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -12193,6 +12217,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -12212,6 +12237,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -12231,6 +12257,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -12250,6 +12277,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -12267,6 +12295,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -12283,6 +12312,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -12900,6 +12930,7 @@ export namespace Prisma {
     price?: SortOrder
     duration?: SortOrder
     level?: SortOrder
+    stripePriceId?: SortOrder
     category?: SortOrder
     smallDescription?: SortOrder
     slug?: SortOrder
@@ -12922,6 +12953,7 @@ export namespace Prisma {
     price?: SortOrder
     duration?: SortOrder
     level?: SortOrder
+    stripePriceId?: SortOrder
     category?: SortOrder
     smallDescription?: SortOrder
     slug?: SortOrder
@@ -12939,6 +12971,7 @@ export namespace Prisma {
     price?: SortOrder
     duration?: SortOrder
     level?: SortOrder
+    stripePriceId?: SortOrder
     category?: SortOrder
     smallDescription?: SortOrder
     slug?: SortOrder
@@ -13902,6 +13935,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -13920,6 +13954,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14061,6 +14096,7 @@ export namespace Prisma {
     price?: IntFilter<"Course"> | number
     duration?: IntFilter<"Course"> | number
     level?: EnumCourseLevelFilter<"Course"> | $Enums.CourseLevel
+    stripePriceId?: StringFilter<"Course"> | string
     category?: StringFilter<"Course"> | string
     smallDescription?: StringFilter<"Course"> | string
     slug?: StringFilter<"Course"> | string
@@ -14471,6 +14507,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14489,6 +14526,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14555,6 +14593,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -14573,6 +14612,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -14674,6 +14714,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14692,6 +14733,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14767,6 +14809,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -14785,6 +14828,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -14876,6 +14920,7 @@ export namespace Prisma {
     price: number
     duration: number
     level?: $Enums.CourseLevel
+    stripePriceId: string
     category: string
     smallDescription: string
     slug: string
@@ -14979,6 +15024,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -14997,6 +15043,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
@@ -15015,6 +15062,7 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
     level?: EnumCourseLevelFieldUpdateOperationsInput | $Enums.CourseLevel
+    stripePriceId?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
