@@ -21,7 +21,7 @@ export function RichTextEditor({ field }: { field: any }) {
       typeof field.value === "string"
         ? JSON.parse(field.value)
         : field.value;
-  } catch (error) {
+  } catch {
     console.warn("Invalid JSON passed to RichTextEditor:", field.value);
     content = {
       type: "doc",

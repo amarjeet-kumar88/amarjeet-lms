@@ -3,7 +3,6 @@ import { CloudAlertIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { number } from "zod";
 
 export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
@@ -88,7 +87,6 @@ export function RenderUploadedState({
 
 export function RenderUploadingState({
   progress,
-  file,
 }: {
   progress: number;
   file: File;

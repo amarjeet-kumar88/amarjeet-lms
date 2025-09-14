@@ -17,7 +17,8 @@ interface iAppProps {
 
 export function CourseProgressCard({ data }: iAppProps) {
   const thumbnailUrl = useConstructUrl(data.Course.fileKey);
-  const { totalLessons, completedLessons, progressPercentage } =
+  const { totalLessons, completedLessons, 
+    progressPercentage } =
     useCourseProgress({ courseData: data.Course as any });
   return (
     <Card className="group relative py-0 gap-0">

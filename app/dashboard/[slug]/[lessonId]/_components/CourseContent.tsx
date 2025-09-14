@@ -104,7 +104,7 @@ export function CourseContent({ data }: iAppProps) {
     </div>
   );
 }
-function triggerConfetti() {
-  throw new Error("Function not implemented.");
-}
+// function triggerConfetti() {
+//   throw new Error("Function not implemented.");
+// }
 

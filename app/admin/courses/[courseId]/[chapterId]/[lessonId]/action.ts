@@ -4,7 +4,6 @@ import { requireAdmin } from '@/app/data/admin/require-admin';
 import { prisma } from '@/lib/db';
 import { ApiResponse } from '@/lib/types';
 import { LessonSchema, LessonSchemaType } from '@/lib/zodSchemas';
-import React from 'react'
 
 export async function UpdateLesson(
     values: LessonSchemaType,
