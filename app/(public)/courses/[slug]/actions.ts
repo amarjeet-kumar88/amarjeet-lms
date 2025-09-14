@@ -160,7 +160,7 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
 
         checkoutUrl = result.checkoutUrl as string;
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof Stripe.errors.StripeError) {
             return {
                 status: "error",
@@ -168,11 +168,14 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
             }
         }
         console.error("Stripe/DB error:", error);
-        return {
-            status: "error",
-            message: error.message || "Failed to enroll in course",
-        };
+        if (error instanceof Error) {
+            return {
+                status: "error",
+                message: error.message || "Failed to enroll in course",
+            };
+        }
     }
+    return { status: "error", message: "Failed to enroll in course" };
 
     redirect(checkoutUrl);
 }

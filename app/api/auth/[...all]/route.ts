@@ -2,7 +2,7 @@
 import arcjet from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import ip from "@arcjet/ip";
-import Arcjet, {
+import {
   type ArcjetDecision,
   type BotOptions,
   type EmailOptions,
@@ -10,7 +10,6 @@ import Arcjet, {
   type SlidingWindowRateLimitOptions,
   detectBot,
   protectSignup,
-  shield,
   slidingWindow,
 } from "@arcjet/next";
 import { toNextJsHandler } from "better-auth/next-js";

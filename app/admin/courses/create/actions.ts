@@ -7,7 +7,6 @@ import { stripe } from "@/lib/stripe";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
-import { Value } from "@radix-ui/react-select";
 
 const aj = arcjet
 .withRule(

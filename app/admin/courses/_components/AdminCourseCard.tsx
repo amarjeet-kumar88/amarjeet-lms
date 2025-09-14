@@ -12,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import {
   ArrowRight,
-  Delete,
   Eye,
   MoreVertical,
   Pencil,
