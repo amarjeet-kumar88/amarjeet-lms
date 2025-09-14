@@ -1,46 +1,44 @@
 "use client";
 
-import { EnrolledCourseType } from "@/app/data/user/get-enrolled-courses";
+import { CourseSidebarDataType } from "@/app/data/course/get-course-sidebar-data";
 import { useMemo } from "react";
 
-interface CourseProgressResult {
-  totalLessons: number;
-  completedLessons: number;
-  progressPercentage: number;
+interface iAppProps {
+    courseData: CourseSidebarDataType["course"];
 }
 
-export function useCourseProgress({
-  courseData,
-}: {
-  courseData: EnrolledCourseType["Course"];
-}): CourseProgressResult {
-  return useMemo(() => {
-    let totalLessons = 0;
-    let completedLessons = 0;
+interface CourseProgressResult {
+    totalLessons: number;
+    completedLessons: number;
+    progressPercentage: number;
+}
 
-    courseData.chapter.forEach((chapter) => {
-      chapter.lessons.forEach((lesson) => {
-        totalLessons++;
+export function useCourseProgress({ courseData }: iAppProps): CourseProgressResult {
+    return useMemo(() => {
+        let totalLessons = 0;
+        let completedLessons = 0;
 
-        const isCompleted = lesson.lessonprogress.some(
-          (progress) => progress.lessonId === lesson.id && progress.completed
-        );
+        courseData.chapter.forEach((chapter) => {
+            chapter.lessons.forEach((lesson) => {
+                totalLessons++;
 
-        if (isCompleted) {
-          completedLessons++;
+                const isCompleted = lesson.lessonprogress.some(
+                    (Progress) => Progress.lessonId === lesson.id && Progress.completed
+                );
+
+                if (isCompleted) {
+                    completedLessons++;
+                }
+            });
+        });
+
+        const progressPercentage = totalLessons > 0 ?
+            Math.round((completedLessons / totalLessons) * 100) : 0;
+
+        return {
+            totalLessons,
+            completedLessons,
+            progressPercentage,
         }
-      });
-    });
-
-    const progressPercentage =
-      totalLessons > 0
-        ? Math.round((completedLessons / totalLessons) * 100)
-        : 0;
-
-    return {
-      totalLessons,
-      completedLessons,
-      progressPercentage,
-    };
-  }, [courseData]);
+    }, [courseData]);
 }
