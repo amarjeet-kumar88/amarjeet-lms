@@ -11,15 +11,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface iAppProps {
+interface CourseProgressCardProps {
   data: EnrolledCourseType;
 }
 
-export function CourseProgressCard({ data }: iAppProps) {
+export function CourseProgressCard({ data }: CourseProgressCardProps) {
   const thumbnailUrl = useConstructUrl(data.Course.fileKey);
-  const { totalLessons, completedLessons, 
-    progressPercentage } =
-    useCourseProgress({ courseData: data.Course as any });
+
+  // ✅ Pass correct type instead of "as any"
+  const { totalLessons, completedLessons, progressPercentage } =
+    useCourseProgress({ courseData: data.Course });
+
   return (
     <Card className="group relative py-0 gap-0">
       <Badge className="absolute top-2 right-2 z-10">{data.Course.level}</Badge>
@@ -42,12 +44,12 @@ export function CourseProgressCard({ data }: iAppProps) {
           {data.Course.smallDescription}
         </p>
 
-        <div className=" space-y-4 mt-5">
+        <div className="space-y-4 mt-5">
           <div className="flex justify-between mb-1 text-sm">
             <p>Progress:</p>
-            <p className=" font-medium">{progressPercentage}%</p>
+            <p className="font-medium">{progressPercentage}%</p>
           </div>
-          <Progress value={progressPercentage} className="h-1.5"/>
+          <Progress value={progressPercentage} className="h-1.5" />
 
           <p className="text-xs text-muted-foreground mt-1">
             {completedLessons} of {totalLessons} lessons completed
