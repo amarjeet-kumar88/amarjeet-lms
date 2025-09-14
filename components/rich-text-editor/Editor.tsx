@@ -6,7 +6,12 @@ import StarterKit from "@tiptap/starter-kit";
 import Menubar from "./Menubar";
 import TextAlign from "@tiptap/extension-text-align";
 
-export function RichTextEditor({ field }: { field: any }) {
+interface RichTextField {
+  value: string;
+  onChange: (val: string) => void;
+}
+
+export function RichTextEditor({ field }: { field: RichTextField }) {
   const [mounted, setMounted] = useState(false);
 
   // ✅ Ensure this code only runs on client
