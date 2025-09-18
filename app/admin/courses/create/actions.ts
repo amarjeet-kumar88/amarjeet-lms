@@ -12,7 +12,7 @@ const aj = arcjet
 .withRule(
     fixedWindow({
         mode: 'LIVE',
-        window: "1m",
+        window: "5m",
         max: 10,
     })
 )
@@ -37,7 +37,6 @@ export async function CreateCourse(
                     message: "You have been blocked due to rate limiting",
                 };
             }
-        } else {
             return {
                 status: "error",
                 message: "You are Bot! if this is a mistake contact our support",
