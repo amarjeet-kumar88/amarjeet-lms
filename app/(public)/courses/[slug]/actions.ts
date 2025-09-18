@@ -174,8 +174,8 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
                 message: error.message || "Failed to enroll in course",
             };
         }
+        return { status: "error", message: "An unknown error occurred while enrolling." };
     }
-    return { status: "error", message: "Failed to enroll in course" };
 
     redirect(checkoutUrl);
 }
