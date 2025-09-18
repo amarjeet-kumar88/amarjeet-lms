@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+//@ts-ignore
+import  PrismaPlugin from "@prisma/nextjs-monorepo-workaround-plugin";
 
 const nextConfig: NextConfig = {
   images: {
@@ -14,16 +16,9 @@ const nextConfig: NextConfig = {
       "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  webpack: (config) => {
-    config.watchOptions = {
-      ignored: [
-        "**/node_modules/**",
-        "**/.git/**",
-        "**/Application Data/**", // ✅ works cross-platform
-        "**/AppData/**",          // ✅ extra ignore for Windows AppData
-      ],
-    };
-    return config;
+  webpack: (config, {isServer}) => {
+    if(isServer)
+    config.plugin = [...config.plugins, new PrismaPlugin()];
   },
 };
 
