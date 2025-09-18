@@ -1,9 +1,8 @@
-import { prisma } from "@/lib/db";
-import { env } from "@/lib/env";
-import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
+import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
-
+import { env } from "@/lib/env";
+import { prisma } from "@/lib/db";
 export async function POST(req:Request) {
     const body = await req.text();
 
@@ -20,7 +19,8 @@ export async function POST(req:Request) {
             env.STRIPE_WEBHOOK_SECRET
         )
         
-    } catch{
+    } catch (error){
+        console.error("Webhook signature verification failed", error);
         return new Response("Webhook error", { status: 400});
     }
 
@@ -29,9 +29,10 @@ export async function POST(req:Request) {
     if(event.type === 'checkout.session.completed'){
         const courseId = session.metadata?.courseId;
         const customerId = session.customer as string;
+        const enrollmentId = session.metadata?.enrollmentId;
 
-        if(!courseId){
-            throw new Error("Course id not found...");
+        if(!courseId || !enrollmentId){
+            throw new Error("Webhook Error: Missing metadata");
         }
 
         const user = await prisma.user.findUnique({
@@ -46,16 +47,13 @@ export async function POST(req:Request) {
 
         await prisma.enrollment.update({
             where: {
-                id: session.metadata?.enrollmentId as string,
-                userId: user.id,
-                courseId: courseId,
+                id: enrollmentId,
             },
             data: {
-                amount: session.amount_total as number,
                 status: "Active",
             },
         });
     }
 
-    return new Response(null, {status: 200});
+    return new Response(null, { status: 200 });
 }
