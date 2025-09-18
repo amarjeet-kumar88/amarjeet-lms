@@ -180,9 +180,9 @@ model LessonProgress {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
-  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  Lesson    Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  Lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId  String
 
   @@unique([userId, lessonId])
