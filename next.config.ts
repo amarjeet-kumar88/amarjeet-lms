@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 //@ts-ignore
-import PrismaPlugin from '@prisma/nextjs-monorepo-workaround-plugin';
+import * as PrismaPlugin from '@prisma/nextjs-monorepo-workaround-plugin';
+
 
 const nextConfig: NextConfig = {
   images: {
@@ -18,10 +19,10 @@ const nextConfig: NextConfig = {
 
    webpack: (config, { isServer }) => {
     if (isServer) {
-      config.plugins.push(new PrismaPlugin());
+      config.plugins.push(PrismaPlugin()); // new नहीं लगाएं, सीधे function call करें
     }
     return config;
-  }
+  },
 };
 
 export default nextConfig;
