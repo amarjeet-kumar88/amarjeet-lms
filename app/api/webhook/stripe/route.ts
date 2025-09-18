@@ -47,10 +47,10 @@ export async function POST(req:Request) {
         await prisma.enrollment.update({
             where: {
                 id: session.metadata?.enrollmentId as string,
-            },
-            data: {
                 userId: user.id,
                 courseId: courseId,
+            },
+            data: {
                 amount: session.amount_total as number,
                 status: "Active",
             },
