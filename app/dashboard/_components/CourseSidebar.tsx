@@ -21,7 +21,7 @@ export default function CourseSidebar({ course }: iAppProps) {
   const pathname = usePathname();
   const currentLessonId = pathname.split("/").pop();
 
-  const {completedLessons, totalLessons, progressPercentage} = useCourseProgress({courseData: course})
+  const {completedLessons, totalLessons, progressPercentage} = useCourseProgress({courseData: { smallDescription: "", ...course }})
 
   return (
     <div className=" flex flex-col h-full border-r">
