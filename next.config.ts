@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 //@ts-ignore
-import  PrismaPlugin from "@prisma/nextjs-monorepo-workaround-plugin";
+import PrismaPlugin from '@prisma/nextjs-monorepo-workaround-plugin';
 
 const nextConfig: NextConfig = {
   images: {
@@ -16,10 +16,12 @@ const nextConfig: NextConfig = {
       "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  webpack: (config, {isServer}) => {
-    if(isServer)
-    config.plugin = [...config.plugins, new PrismaPlugin()];
-  },
+   webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins.push(new PrismaPlugin());
+    }
+    return config;
+  }
 };
 
 export default nextConfig;
