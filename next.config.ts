@@ -19,7 +19,8 @@ const nextConfig: NextConfig = {
       ignored: [
         "**/node_modules/**",
         "**/.git/**",
-        "C:/Users/amarj/Application Data/**", // 🚫 ignore protected folder
+        "**/Application Data/**", // ✅ works cross-platform
+        "**/AppData/**",          // ✅ extra ignore for Windows AppData
       ],
     };
     return config;
