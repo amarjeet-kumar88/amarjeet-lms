@@ -81,7 +81,7 @@ export default function Home() {
                 size: "lg",
                 variant: "outline",
               })}
-              href="/signin"
+              href="/login"
             >
               Sign in
             </Link>
