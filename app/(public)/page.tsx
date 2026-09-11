@@ -72,7 +72,7 @@ export default function Home() {
               className={buttonVariants({
                 size: "lg",
               })}
-              href="/cources"
+              href="/courses"
             >
               Explore Cources
             </Link>
