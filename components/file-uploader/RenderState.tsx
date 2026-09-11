@@ -3,7 +3,6 @@ import { CloudAlertIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { number } from "zod";
 
 export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
@@ -49,19 +48,25 @@ export function RenderUploadedState({
   previewUrl,
   isDeleting,
   handleRemovaFile,
+  fileType,
 }: {
   previewUrl: string;
-  isDeleting: boolean,
+  isDeleting: boolean;
   handleRemovaFile: () => void;
+  fileType: "image" | "video";
 }) {
   return (
-    <div>
-      <Image
-        src={previewUrl}
-        alt="Uploaded File"
-        fill
-        className="object-contain p-2"
-      />
+    <div className="relative group w-full h-full flex items-center justify-center">
+      {fileType === "video" ? (
+        <video src={previewUrl} controls className="rounded-md w-full h-full" />
+      ) : (
+        <Image
+          src={previewUrl}
+          alt="Uploaded File"
+          fill
+          className="object-contain p-2"
+        />
+      )}
 
       <Button
         variant="destructive"
@@ -71,8 +76,8 @@ export function RenderUploadedState({
         disabled={isDeleting}
       >
         {isDeleting ? (
-          <Loader2 className="size-4 animate-spin"/>
-        ): (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
           <XIcon className="size-4" />
         )}
       </Button>
@@ -82,7 +87,6 @@ export function RenderUploadedState({
 
 export function RenderUploadingState({
   progress,
-  file,
 }: {
   progress: number;
   file: File;

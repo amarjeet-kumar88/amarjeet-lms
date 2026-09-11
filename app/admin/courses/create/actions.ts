@@ -1,27 +1,24 @@
 "use server";
 
 import { requireAdmin } from "@/app/data/admin/require-admin";
-import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
+import arcjet, { fixedWindow } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
 
-const aj = arcjet.withRule(
-    detectBot({
-        mode: "LIVE",
-        allow: [],
-    })
-).withRule(
+const aj = arcjet
+.withRule(
     fixedWindow({
         mode: 'LIVE',
         window: "1m",
-        max: 5,
+        max: 10,
     })
 )
 
 export async function CreateCourse(
-    data: CourseSchemaType
+    values: CourseSchemaType
 ): Promise<ApiResponse> {
 
     const session = await requireAdmin();
@@ -47,7 +44,7 @@ export async function CreateCourse(
             };
         }
 
-        const validation = courseSchema.safeParse(data);
+        const validation = courseSchema.safeParse(values);
 
         if (!validation.success) {
             return {
@@ -56,11 +53,21 @@ export async function CreateCourse(
             };
         }
 
+        const data = await stripe.products.create({
+            name: validation.data.title,
+            description: validation.data.smallDescription,
+            default_price_data: {
+                currency: 'inr',
+                unit_amount: validation.data.price * 100,
+            }
+        })
+
         // Use a different name to avoid conflict (e.g., createdCourse)
         await prisma.course.create({
             data: {
                 ...validation.data,
                 userId: session?.user.id as string,
+                stripePriceId: data.default_price as string,
             },
         });
 
